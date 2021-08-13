@@ -26,5 +26,25 @@ namespace MISA.CukCuk.Core.Constants
         /// Mã lỗi khi validate trường duy nhất thất bại
         /// </summary>
         public const string ValidateUniqueErrorCode = "MISA_003";
+
+        /// <summary>
+        /// Mã lỗi khi validate định dạng thất bại
+        /// </summary>
+        public const string ValidateFormatErrorCode = "MISA_004";
+
+        /// <summary>
+        /// Mã lỗi khi validate độ dài tối đa thất bại
+        /// </summary>
+        public const string ValidateMaxLengthErrorCode = "MISA_005";
+
+        /// <summary>
+        /// Mã lỗi khi query string không hợp lệ
+        /// </summary>
+        public const string QueryStringError = "MISA_006";
+
+        /// <summary>
+        /// Mã lỗi khi route không hợp lệ
+        /// </summary>
+        public const string RouteError = "MISA_007";
     }
 }
