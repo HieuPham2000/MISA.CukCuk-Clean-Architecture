@@ -121,20 +121,26 @@
     <value>Có lỗi xảy ra, vui lòng liên hệ với MISA để được trợ giúp!</value>
     <comment>Thông báo cho người dùng khi xảy ra exception</comment>
   </data>
-  <data name="ValidateError_CustomerCodeDuplicate" xml:space="preserve">
-    <value>Mã khách hàng đã tồn tại, vui lòng nhập mã khách hàng khác!</value>
-    <comment>Thông báo cho người dùng khi CustomerCode bị trùng</comment>
+  <data name="GeneralError" xml:space="preserve">
+    <value>Có lỗi xảy ra, vui lòng liên hệ với MISA để được trợ giúp!</value>
   </data>
-  <data name="ValidateError_CustomerCodeEmpty" xml:space="preserve">
-    <value>Mã khách hàng không được để trống, vui lòng nhập mã khách hàng!</value>
-    <comment>Thông báo cho người dùng khi CustomerCode bị trống</comment>
+  <data name="QueryStringError" xml:space="preserve">
+    <value>Tham số đường dẫn {0} không hợp lệ!</value>
   </data>
-  <data name="ValidateError_EmployeeCodeDuplicate" xml:space="preserve">
-    <value>Mã nhân viên đã tồn tại, vui lòng nhập mã nhân viên khác!</value>
-    <comment>Thông báo cho người dùng khi EmployeeCode bị trùng</comment>
+  <data name="ValidateFormatError" xml:space="preserve">
+    <value>Thông tin "{0}" không đúng định dạng!</value>
+    <comment>Thông báo cho người dùng khi giá trị không đúng định dạng</comment>
   </data>
-  <data name="ValidateError_EmployeeCodeEmpty" xml:space="preserve">
-    <value>Mã nhân viên không được để trống, vui lòng nhập mã nhân viên!</value>
-    <comment>Thông báo cho người dùng khi EmployeeCode bị trống</comment>
+  <data name="ValidateMaxLengthError" xml:space="preserve">
+    <value>Thông tin "{0}" vượt quá độ dài cho phép (tối đa {1} ký tự) </value>
+    <comment>Thông báo cho người dùng khi giá trị vượt quá độ dài quy định</comment>
+  </data>
+  <data name="ValidateRequiredError" xml:space="preserve">
+    <value>Thông tin "{0}" không được phép để trống!</value>
+    <comment>Thông báo cho người dùng khi để trống trường bắt buộc</comment>
+  </data>
+  <data name="ValidateUniqueError" xml:space="preserve">
+    <value>Thông tin "{0}" không được phép trùng!</value>
+    <comment>Thông báo cho người dùng khi giá trị bị trùng (với các trường duy nhất)</comment>
   </data>
 </root>

@@ -70,38 +70,56 @@ namespace MISA.CukCuk.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Mã khách hàng đã tồn tại, vui lòng nhập mã khách hàng khác!.
+        ///   Looks up a localized string similar to Có lỗi xảy ra, vui lòng liên hệ với MISA để được trợ giúp!.
         /// </summary>
-        public static string ValidateError_CustomerCodeDuplicate {
+        public static string GeneralError {
             get {
-                return ResourceManager.GetString("ValidateError_CustomerCodeDuplicate", resourceCulture);
+                return ResourceManager.GetString("GeneralError", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Mã khách hàng không được để trống, vui lòng nhập mã khách hàng!.
+        ///   Looks up a localized string similar to Tham số đường dẫn {0} không hợp lệ!.
         /// </summary>
-        public static string ValidateError_CustomerCodeEmpty {
+        public static string QueryStringError {
             get {
-                return ResourceManager.GetString("ValidateError_CustomerCodeEmpty", resourceCulture);
+                return ResourceManager.GetString("QueryStringError", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Mã nhân viên đã tồn tại, vui lòng nhập mã nhân viên khác!.
+        ///   Looks up a localized string similar to Thông tin &quot;{0}&quot; không đúng định dạng!.
         /// </summary>
-        public static string ValidateError_EmployeeCodeDuplicate {
+        public static string ValidateFormatError {
             get {
-                return ResourceManager.GetString("ValidateError_EmployeeCodeDuplicate", resourceCulture);
+                return ResourceManager.GetString("ValidateFormatError", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Mã nhân viên không được để trống, vui lòng nhập mã nhân viên!.
+        ///   Looks up a localized string similar to Thông tin &quot;{0}&quot; vượt quá độ dài cho phép (tối đa {1} ký tự) .
         /// </summary>
-        public static string ValidateError_EmployeeCodeEmpty {
+        public static string ValidateMaxLengthError {
             get {
-                return ResourceManager.GetString("ValidateError_EmployeeCodeEmpty", resourceCulture);
+                return ResourceManager.GetString("ValidateMaxLengthError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Thông tin &quot;{0}&quot; không được phép để trống!.
+        /// </summary>
+        public static string ValidateRequiredError {
+            get {
+                return ResourceManager.GetString("ValidateRequiredError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Thông tin &quot;{0}&quot; không được phép trùng!.
+        /// </summary>
+        public static string ValidateUniqueError {
+            get {
+                return ResourceManager.GetString("ValidateUniqueError", resourceCulture);
             }
         }
     }
