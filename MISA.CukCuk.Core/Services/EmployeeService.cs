@@ -10,95 +10,74 @@ using System.Threading.Tasks;
 
 namespace MISA.CukCuk.Core.Services
 {
-    public class EmployeeService : IEmployeeService
+    /// <summary>
+    /// Lớp xử lý nghiệp vụ khi thao tác với dữ liệu Nhân viên (Employee)
+    /// </summary>
+    /// CreatedBy: PTHIEU (02/08/2021) 
+    public class EmployeeService : BaseService<Employee>, IEmployeeService
     {
         #region Fields
 
-        ServiceResult _serviceResult;
         IEmployeeRepository _employeeRepository;
 
         #endregion
 
         #region Constructors
 
-        public EmployeeService(IEmployeeRepository employeeRepository)
+        public EmployeeService(IEmployeeRepository employeeRepository) : base(employeeRepository)
         {
             _employeeRepository = employeeRepository;
-            _serviceResult = new ServiceResult();
-    }
+        }
+
         #endregion
 
         #region Methods
 
         /// <summary>
-        /// Xử lý nghiệp vụ khi thêm mới nhân viên
+        /// Service xử lý khi lấy danh sách nhân viên theo các tiêu chí (lọc)
         /// </summary>
-        /// <param name="employee">Đối tượng nhân viên</param>
-        /// <returns>Kết quả thực hiện service</returns>
-        /// CreatedBy: PTHIEU (29-07-2021)
-        public ServiceResult Add(Employee employee)
+        /// <param name="employeeFilter">Thông tin tìm kiếm</param>
+        /// <param name="departmentId">Mã phòng ban</param>
+        /// <param name="positionId">Mã vị trí/chức vụ</param>
+        /// <param name="pageIndex">Chỉ số của bản ghi đầu tiên muốn lấy</param>
+        /// <param name="pageSize">Kích thước trang, hay số lượng bản ghi/trang</param>
+        /// <returns>Đối tượng ServiceResult chứa kết quả thực hiện</returns>
+        /// CreatedBy: PTHIEU (04/08/2021)
+        public ServiceResult GetEmployeeByFilter(string employeeFilter, Guid? departmentId, Guid? positionId, int pageIndex, int pageSize)
         {
-            // Validate dữ liệu:
-            // 1. Check đã có thông tin mã nhân viên hay chưa?:
-            if (string.IsNullOrEmpty(employee.EmployeeCode))
+            if(pageIndex < 0 || pageSize < 0)
             {
-                _serviceResult.IsSuccess = false;
-                _serviceResult.UserMsg = Properties.Resources.ValidateError_EmployeeCodeEmpty;
-                _serviceResult.ErrorCode = MISAErrorCode.ValidateRequiredErrorCode;
-                return _serviceResult;
+                ServiceResult.IsSuccess = false;
+                ServiceResult.UserMsg = Properties.Resources.GeneralError;
+                ServiceResult.DevMsg = Properties.Resources.QueryStringError;
+                ServiceResult.ErrorCode = MISAErrorCode.QueryStringError;
+                return ServiceResult;
             }
 
-            // 2. Check mã nhân viên có trùng hay không? - Không được phép trùng.
-            if (_employeeRepository.CheckDuplicateEmployeeCode(employee.EmployeeCode) == true)
-            {
-                _serviceResult.IsSuccess = false;
-                _serviceResult.UserMsg = Properties.Resources.ValidateError_EmployeeCodeDuplicate;
-                _serviceResult.ErrorCode = MISAErrorCode.ValidateUniqueErrorCode;
-                return _serviceResult;
-            }
+            ServiceResult.IsSuccess = true;
+            ServiceResult.Data = _employeeRepository.GetEmployeeByFilter(
+                employeeFilter: employeeFilter, 
+                departmentId: departmentId, 
+                positionId: positionId, 
+                pageIndex: pageIndex, 
+                pageSize: pageSize);
 
-            // 3. Check email có đúng định dạng hay không?
-
-
-            _serviceResult.Data = _employeeRepository.Add(employee);
-            return _serviceResult;
+            return ServiceResult;
         }
 
-
         /// <summary>
-        /// Xử lý nghiệp vụ khi cập nhật thông tin nhân viên
+        /// Service xử lý khi lấy mã nhân viên mới
         /// </summary>
-        /// <param name="employee">Đối tượng nhân viên</param>
-        /// <returns>Kết quả thực hiện service</returns>
-        /// CreatedBy: PTHIEU (29-07-2021)
-        public ServiceResult Update(Employee employee)
+        /// <returns>Đối tượng ServiceResult chứa kết quả thực hiện</returns>
+        /// CreatedBy: PTHIEU (04/08/2021)
+        public ServiceResult GetNewEmployeeCode()
         {
-            // Validate dữ liệu:
-            // 1. Check đã có thông tin mã nhân viên hay chưa?:
-            if (string.IsNullOrEmpty(employee.EmployeeCode))
-            {
-                _serviceResult.IsSuccess = false;
-                _serviceResult.UserMsg = Properties.Resources.ValidateError_EmployeeCodeEmpty;
-                _serviceResult.ErrorCode = MISAErrorCode.ValidateRequiredErrorCode;
-                return _serviceResult;
-            }
-
-            // 2. Check mã nhân viên có trùng hay không? - Không được phép trùng. (trừ TH trùng mã cũ)
-            if (_employeeRepository.CheckDuplicateEmployeeCode(employee.EmployeeCode, employee.EmployeeId.ToString()) == true)
-            {
-                _serviceResult.IsSuccess = false;
-                _serviceResult.UserMsg = Properties.Resources.ValidateError_EmployeeCodeDuplicate;
-                _serviceResult.ErrorCode = MISAErrorCode.ValidateUniqueErrorCode;
-                return _serviceResult;
-            }
-
-            // 3. Check email có đúng định dạng hay không?
-
-
-            _serviceResult.Data = _employeeRepository.Update(employee);
-            return _serviceResult;
+            ServiceResult.IsSuccess = true;
+            ServiceResult.Data = _employeeRepository.GetNewEmployeeCode();
+            return ServiceResult;
         }
 
         #endregion
+
     }
 }
