@@ -13,107 +13,48 @@ using MISA.CukCuk.Core.Entities;
 
 namespace MISA.CukCuk.Api.Controllers
 {
-    [Route("api/v1/employees")]
-    [ApiController]
-    public class EmployeesController : ControllerBase
+    /// <summary>
+    /// Lớp controller cung cấp api thao tác với dữ liệu Nhân viên (Employee)
+    /// </summary>
+    /// CreatedBy: PTHIEU (30/07/2021)
+    public class EmployeesController : BaseEntitiesController<Employee>
     {
         #region Fields
 
         IEmployeeService _employeeService;
-        IBaseRepository<Employee> _baseRepository;
 
         #endregion
 
         #region Constructors
-        public EmployeesController(IEmployeeService employeeService, IBaseRepository<Employee> baseRepository)
+        public EmployeesController(IEmployeeService employeeService) : base(employeeService)
         {
             _employeeService = employeeService;
-            _baseRepository = baseRepository;
         }
         #endregion
 
         #region Methods
 
         /// <summary>
-        /// Tạo API lấy thông tin của tất cả nhân viên
+        /// API lấy ra mã nhân viên mới
         /// </summary>
         /// <returns>
-        /// - 200: Truy vấn thành công danh sách nhân viên
-        /// - 204: Dữ liệu null
-        /// - 500: Xảy ra exception
+        /// - 200: lấy thành công, hiển thị mã mới
+        /// - 204: không có dữ liệu
+        /// - 500: xảy ra exception
         /// </returns>
-        /// CreatedBy: PTHIEU 21/07/2021
-        [HttpGet]
-        public IActionResult GetAllEmployees()
+        /// CreatedBy: PTHIEU (2/8/2021)
+        [HttpGet("NewEmployeeCode")]
+        public IActionResult GetNewEmployeeCode()
         {
             try
             {
-                var employees = _baseRepository.GetAll();
-                return Ok(employees);
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, new ServiceResult(e));
-            }
+                var newEmployeeCode = (string)_employeeService.GetNewEmployeeCode().Data;
 
-        }
-
-
-        /// <summary>
-        /// Tạo API lấy thông tin của nhân viên cụ thể (thông qua EmployeeId)
-        /// </summary>
-        /// <param name="employeeId">Khóa chính/id nhân viên</param>
-        /// <returns>
-        /// - 200: Truy vấn thành công => Trả về thông tin nhân viên tương ứng
-        /// - 204: Không có nhân viên tương ứng
-        /// - 500: Xảy ra exception
-        /// </returns>
-        /// CreatedBy: PTHIEU 21/07/2021
-        [HttpGet("{employeeId}")]
-        public IActionResult GetEmployeeById(Guid employeeId)
-        {
-            try
-            {
-                var employee = _baseRepository.GetById(employeeId);
-                return Ok(employee);
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, new ServiceResult(e));
-            }
-
-        }
-
-        /// <summary>
-        /// Tạo API thêm nhân viên mới
-        /// </summary>
-        /// <param name="employee">Thông tin nhân viên thêm mới</param>
-        /// <returns>
-        /// - 201: Thêm mới thành công => Hiển thị số bản ghi được thêm
-        /// - 204: Không có bản ghi nào được thêm
-        /// - 400: Có lỗi xảy ra khi validate dữ liệu
-        /// - 500: Lỗi exception
-        /// </returns>
-        /// CreatedBy: PTHIEU 26/07/2021
-        [HttpPost]
-        public IActionResult PostEmployee(Employee employee)
-        {
-            try
-            {
-                var serviceResult = _employeeService.Add(employee);
-
-                if(serviceResult.IsSuccess == false)
+                if(string.IsNullOrEmpty(newEmployeeCode))
                 {
-                    return BadRequest(serviceResult);
+                    return NoContent();
                 }
-
-                var rowAffected = (int)serviceResult.Data;
-                if (rowAffected > 0)
-                {
-                    return StatusCode(201, rowAffected);
-                }
-
-                return NoContent();
+                return Ok(newEmployeeCode);
             }
             catch (Exception e)
             {
@@ -123,35 +64,38 @@ namespace MISA.CukCuk.Api.Controllers
 
 
         /// <summary>
-        /// Tạo API thay đổi thông tin nhân viên
+        /// API lấy ra danh sách nhân viên theo tiêu chí (lọc)
         /// </summary>
-        /// <param name="employee">Thông tin nhân viên</param>
+        /// <param name="employeeFilter">Thông tin tìm kiếm</param>
+        /// <param name="departmentId">Mã phòng ban</param>
+        /// <param name="positionId">Mã vị trí/chức vụ</param>
+        /// <param name="pageIndex">Chỉ số của bản ghi đầu tiên muốn lấy</param>
+        /// <param name="pageSize">Kích thước trang, hay số lượng bản ghi/trang</param>
         /// <returns>
-        /// - 200: Thay đổi thành công => Hiển thị số bản ghi thay đổi
-        /// - 204: Không có bản ghi nào thay đổi
-        /// - 400: Có lỗi xảy ra khi validate dữ liệu
-        /// - 500: Lỗi exception
+        /// - 200: lấy thành công, hiển thị danh sách 
+        /// - 204: không có dữ liệu
+        /// - 400: Có lỗi xảy ra (validate thất bại..)
+        /// - 500: xảy ra exception
         /// </returns>
-        /// CreatedBy: PTHIEU 26/07/2021
-        [HttpPut]
-        public IActionResult PutEmployee([FromBody] Employee employee)
+        /// CreatedBy: PTHIEU (2/8/2021)
+        [HttpGet("EmployeeFilter")]
+        public IActionResult GetEmployeeByFilter(string employeeFilter = null, Guid? departmentId = null, Guid? positionId = null, int pageIndex = 0, int pageSize = 0)
         {
             try
             {
-                var serviceResult = _employeeService.Update(employee);
+                var serviceResult = _employeeService.GetEmployeeByFilter(
+                    employeeFilter: employeeFilter,
+                    departmentId: departmentId,
+                    positionId: positionId,
+                    pageIndex: pageIndex,
+                    pageSize: pageSize);
 
                 if (serviceResult.IsSuccess == false)
                 {
                     return BadRequest(serviceResult);
                 }
 
-                var rowAffected = (int)serviceResult.Data;
-                if (rowAffected > 0)
-                {
-                    return Ok(rowAffected);
-                }
-
-                return NoContent();
+                return Ok(serviceResult.Data);
             }
             catch (Exception e)
             {
@@ -159,35 +103,6 @@ namespace MISA.CukCuk.Api.Controllers
             }
         }
 
-
-        /// <summary>
-        /// Tạo API xóa nhân viên
-        /// </summary>
-        /// <param name="employeeId">Khóa/id nhân viên</param>
-        /// <returns>
-        /// - 200: Xóa thành công => Hiển thị số bản ghi bị ảnh hưởng
-        /// - 204: Không có bản ghi nào bị ảnh hưởng
-        /// - 500: Lỗi exception
-        /// </returns>
-        /// CreatedBy: PTHIEU 26/07/2021
-        [HttpDelete("{employeeId}")]
-        public IActionResult DeleteEmployee(Guid employeeId)
-        {
-            try
-            {
-                var rowAffected = _baseRepository.Delete(employeeId);
-                if (rowAffected > 0)
-                {
-                    return Ok(rowAffected);
-                }
-
-                return NoContent();
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, new ServiceResult(e));
-            }
-        }
 
         #endregion
 
