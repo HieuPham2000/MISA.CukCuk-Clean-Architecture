@@ -10,7 +10,7 @@ namespace MISA.CukCuk.Core.Entities
     /// Thông tin nhân viên
     /// </summary>
     /// CreatedBy: PTHIEU (21/07/2021)
-    public class Employee: BaseEntity
+    public class Employee : BaseEntity
     {
         #region Properties
 
@@ -22,6 +22,10 @@ namespace MISA.CukCuk.Core.Entities
         /// <summary>
         /// Mã nhân viên
         /// </summary>
+        [MISARequired]
+        [MISAUnique]
+        [MISAMaxLength(20)]
+        [MISADisplayName("Mã nhân viên")]
         public string EmployeeCode { get; set; }
 
         /// <summary>
@@ -37,12 +41,9 @@ namespace MISA.CukCuk.Core.Entities
         /// <summary>
         /// Họ và tên
         /// </summary>
+        [MISARequired]
+        [MISADisplayName("Họ tên nhân viên")]
         public string FullName { get; set; }
-
-        /// <summary>
-        /// Giới tính (đại diện bằng số nguyên)
-        /// </summary>
-        public Gender? Gender { get; set; }
 
         /// <summary>
         /// Ngày sinh
@@ -50,23 +51,39 @@ namespace MISA.CukCuk.Core.Entities
         public DateTime? DateOfBirth { get; set; }
 
         /// <summary>
-        /// Số điện thoại
+        /// Giới tính (đại diện bằng số nguyên)
         /// </summary>
-        public string PhoneNumber { get; set; }
+        public Gender? Gender { get; set; }
 
         /// <summary>
-        /// Địa chỉ email
+        /// Giới tính
         /// </summary>
-        public string Email { get; set; }
+        public string GenderName
+        {
+            get
+            {
+                switch (this.Gender)
+                {
+                    case Enums.Gender.Male:
+                        return "Nam";
+                    case Enums.Gender.Female:
+                        return "Nữ";
+                    case Enums.Gender.Other:
+                        return "Khác";
+                    default:
+                        return null;
+                }
+            }
 
-        /// <summary>
-        /// Địa chỉ
-        /// </summary>
-        public string Address { get; set; }
+            set { }
+        }
 
         /// <summary>
         /// Số CMND/Căn cước công dân
         /// </summary>
+        [MISARequired]
+        [MISAUnique]
+        [MISADisplayName("Số CMTND/Căn cước")]
         public string IdentityNumber { get; set; }
 
         /// <summary>
@@ -78,6 +95,28 @@ namespace MISA.CukCuk.Core.Entities
         /// Nơi cấp CMND/CCCD
         /// </summary>
         public string IdentityPlace { get; set; }
+
+        /// <summary>
+        /// Địa chỉ email
+        /// </summary>
+        [MISARequired]
+        [MISAUnique]
+        [MISAEmail]
+        [MISADisplayName("Email")]
+        public string Email { get; set; }
+
+        /// <summary>
+        /// Số điện thoại
+        /// </summary>
+        [MISAUnique]
+        [MISAPhoneNumber]
+        [MISADisplayName("Số điện thoại")]
+        public string PhoneNumber { get; set; }
+
+        /// <summary>
+        /// Địa chỉ
+        /// </summary>
+        public string Address { get; set; }
 
         /// <summary>
         /// Thời điểm gia nhập công ty
@@ -95,19 +134,19 @@ namespace MISA.CukCuk.Core.Entities
         public int? EducationalBackground { get; set; }
 
         /// <summary>
-        /// Khóa/id bằng cấp
+        /// Khóa/id trình độ chuyên môn
         /// </summary>
-        //public Guid? QualificationId { get; set; }
+        public Guid? QualificationId { get; set; }
 
         /// <summary>
         /// Khóa/id phòng ban
         /// </summary>
-        //public Guid? DepartmentId { get; set; }
+        public Guid? DepartmentId { get; set; }
 
         /// <summary>
         /// Khóa/id chức vụ
         /// </summary>
-        //public Guid? PositionId { get; set; }
+        public Guid? PositionId { get; set; }
 
         /// <summary>
         /// Trạng thái công việc (đại diện bằng số nguyên)
@@ -137,7 +176,7 @@ namespace MISA.CukCuk.Core.Entities
         /// <summary>
         /// Mã phòng ban
         /// </summary>
-        public string  DepartmentCode { get; set; }
+        public string DepartmentCode { get; set; }
 
         /// <summary>
         /// Tên phòng ban
@@ -148,11 +187,6 @@ namespace MISA.CukCuk.Core.Entities
         /// Tên bằng cấp
         /// </summary>
         public string QualificationName { get; set; }
-
-        /// <summary>
-        /// Giới tính
-        /// </summary>
-        public string GenderName { get; set; }
 
         /// <summary>
         /// Trình độ học vấn

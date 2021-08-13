@@ -20,11 +20,17 @@ namespace MISA.CukCuk.Core.Entities
         /// <summary>
         /// Mã phòng ban
         /// </summary>
+        [MISARequired]
+        [MISAUnique]
+        [MISADisplayName("Mã phòng ban")]
         public string DepartmentCode { get; set; }
 
         /// <summary>
         /// Tên phòng ban
         /// </summary>
+        [MISARequired]
+        [MISAUnique]
+        [MISADisplayName("Tên phòng ban")]
         public string DepartmentName { get; set; }
 
         /// <summary>

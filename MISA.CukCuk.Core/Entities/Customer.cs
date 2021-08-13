@@ -22,11 +22,16 @@ namespace MISA.CukCuk.Core.Entities
         /// <summary>
         /// Mã khách hàng
         /// </summary>
+        [MISARequired]
+        [MISAUnique]
+        [MISADisplayName("Mã khách hàng")]
         public string CustomerCode { get; set; }
 
         /// <summary>
         /// Họ và tên
         /// </summary>
+        [MISARequired]
+        [MISADisplayName("Họ tên khách hàng")]
         public string FullName { get; set; }
 
         /// <summary>

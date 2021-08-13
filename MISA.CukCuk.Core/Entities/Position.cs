@@ -20,11 +20,17 @@ namespace MISA.CukCuk.Core.Entities
         /// <summary>
         /// Mã chức vụ
         /// </summary>
+        [MISARequired]
+        [MISAUnique]
+        [MISADisplayName("Mã vị trí/chức vụ")]
         public string PositionCode { get; set; }
 
         /// <summary>
         /// Tên chức vụ
         /// </summary>
+        [MISARequired]
+        [MISAUnique]
+        [MISADisplayName("Tên vị trí/chức vụ")]
         public string PositionName { get; set; }
 
         /// <summary>
