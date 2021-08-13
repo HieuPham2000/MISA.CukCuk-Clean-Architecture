@@ -17,20 +17,18 @@ namespace MISA.CukCuk.Api.Controllers
     /// CreatedBy: PTHIEU (2/8/2021)
     [Route("api/v1/[controller]")]
     [ApiController]
-    public class BaseEntitiesController<MISAEntity> : ControllerBase
+    public class BaseEntitiesController<MISAEntity> : ControllerBase where MISAEntity : class
     {
         #region Fields
 
-        IBaseRepository<MISAEntity> _baseRepository;
         IBaseService<MISAEntity> _baseService;
 
         #endregion
 
         #region Constructors
 
-        public BaseEntitiesController(IBaseRepository<MISAEntity> baseRepository, IBaseService<MISAEntity> baseService)
+        public BaseEntitiesController(IBaseService<MISAEntity> baseService)
         {
-            _baseRepository = baseRepository;
             _baseService = baseService;
         }
 
@@ -39,10 +37,10 @@ namespace MISA.CukCuk.Api.Controllers
         #region Methods
 
         /// <summary>
-        /// API lấy ra danh sách tất cả thực thể
+        /// API lấy ra danh sách tất cả bản ghi
         /// </summary>
         /// <returns>
-        /// - 200: lấy thành công, hiển thị danh sách các đối tượng thực thể
+        /// - 200: lấy thành công, hiển thị danh sách bản ghi
         /// - 204: không có dữ liệu
         /// - 500: xảy ra exception
         /// </returns>
@@ -52,12 +50,8 @@ namespace MISA.CukCuk.Api.Controllers
         {
             try
             {
-                var entities = _baseRepository.GetAll();
-
-                if(entities == null || entities.Count() == 0)
-                {
-                    return NoContent();
-                }
+                // Lấy dữ liệu trả về thông qua service
+                var entities = _baseService.GetAll().Data;
 
                 return Ok(entities);
             }
@@ -82,12 +76,8 @@ namespace MISA.CukCuk.Api.Controllers
         {
             try
             {
-                var entity = _baseRepository.GetById(entityId);
-
-                if (entity == null)
-                {
-                    return NoContent();
-                }
+                // Lấy dữ liệu trả về thông qua service
+                var entity = _baseService.GetById(entityId).Data;
 
                 return Ok(entity);
             }
@@ -104,6 +94,7 @@ namespace MISA.CukCuk.Api.Controllers
         /// <returns>
         /// - 201: thêm thành công
         /// - 204: không có bản ghi nào được thêm
+        /// - 400: thực hiện thất bại do có lỗi khi xử lý nghiệp vụ (validate...)
         /// - 500: xảy ra exception
         /// </returns>
         /// CreatedBy: PTHIEU (2/8/2021)
@@ -112,7 +103,19 @@ namespace MISA.CukCuk.Api.Controllers
         {
             try
             {
-                var rowAffects = _baseRepository.Add(entity);
+                // Thực hiện service thêm mới
+                var serviceResult = _baseService.Insert(entity);
+
+                // Trường hợp thêm mới thất bại (validate thất bại, dữ liệu truyền vào không hợp lệ...)
+                if (serviceResult.IsSuccess == false)
+                {
+                    return BadRequest(serviceResult);
+                }
+
+                // Trường hợp thành công
+                // => Lấy kết quả: số bản ghi được thêm
+                var rowAffects = (int)serviceResult.Data;
+
                 if (rowAffects > 0)
                 {
                     return StatusCode(201, rowAffects);
@@ -133,18 +136,31 @@ namespace MISA.CukCuk.Api.Controllers
         /// <returns>
         /// - 200: chỉnh sửa thành công
         /// - 204: không có bản ghi nào bị ảnh hưởng
+        /// - 400: thực hiện thất bại do có lỗi khi xử lý nghiệp vụ (validate...)
         /// - 500: xảy ra exception
         /// </returns>
         /// CreatedBy: PTHIEU (2/8/2021)
-        [HttpPut]
-        public IActionResult PutEntity(MISAEntity entity)
+        [HttpPut("{entityId}")]
+        public IActionResult PutEntity(Guid entityId, MISAEntity entity)
         {
             try
             {
-                var rowAffects = _baseRepository.Update(entity);
+                // Thực hiện service cập nhật/chỉnh sửa
+                var serviceResult = _baseService.Update(entityId, entity);
+
+                // Trường hợp thực hiện thất bại (validate thất bại, dữ liệu truyền vào không hợp lệ...)
+                if (serviceResult.IsSuccess == false)
+                {
+                    return BadRequest(serviceResult);
+                }
+
+                // Trường hợp thành công
+                // => Lấy kết quả: số bản ghi bị ảnh hưởng
+                var rowAffects = (int)serviceResult.Data;
+
                 if (rowAffects > 0)
                 {
-                    return Ok(rowAffects);
+                    return StatusCode(201, rowAffects);
                 }
 
                 return NoContent();
@@ -171,7 +187,9 @@ namespace MISA.CukCuk.Api.Controllers
         {
             try
             {
-                var rowAffects = _baseRepository.Delete(entityId);
+                // Thực hiện service xóa bản ghi
+                // => Lấy kết quả: số bản ghi bị ảnh hưởng (bị xóa)
+                var rowAffects = (int)_baseService.Delete(entityId).Data;
 
                 if (rowAffects > 0)
                 {

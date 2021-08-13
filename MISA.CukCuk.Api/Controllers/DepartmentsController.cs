@@ -13,12 +13,15 @@ using System.Threading.Tasks;
 
 namespace MISA.CukCuk.Api.Controllers
 {
+    /// <summary>
+    /// Lớp controller cung cấp api thao tác với dữ liệu Phòng ban (Department)
+    /// </summary>
+    /// CreatedBy: PTHIEU (30/07/2021)
     public class DepartmentsController : BaseEntitiesController<Department>
     {
 
         #region Constructors
-        public DepartmentsController(IBaseRepository<Department> baseRepository, IBaseService<Department> baseService) : 
-            base(baseRepository, baseService)
+        public DepartmentsController(IBaseService<Department> baseService) : base(baseService)
         {
 
         }

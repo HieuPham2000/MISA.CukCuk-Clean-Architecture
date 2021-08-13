@@ -13,14 +13,15 @@ using MISA.CukCuk.Core.Interfaces.Service;
 
 namespace MISA.CukCuk.Api.Controllers
 {
-    [Route("api/v1/positions")]
-    [ApiController]
+    /// <summary>
+    /// Lớp controller cung cấp api thao tác với dữ liệu Vị trí/Chức vụ (Position)
+    /// </summary>
+    /// CreatedBy: PTHIEU (30/07/2021)
     public class PositionsController : BaseEntitiesController<Position>
     {
 
         #region Constructors
-        public PositionsController(IBaseRepository<Position> baseRepository, IBaseService baseService) :
-            base(baseRepository, baseService)
+        public PositionsController(IBaseService<Position> baseService) : base( baseService)
         {
 
         }
